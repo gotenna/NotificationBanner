@@ -157,7 +157,6 @@ public class MainActivity extends AppCompatActivity {
         textView.setText("This is text for the banner");
         bannerClickListener();
         Banner.getInstance().setCustomAnimationStyle(R.style.NotificationAnimationTop);
-        Banner.getInstance().setAsDropDown(true);
         Banner.getInstance().show();
     }
 
