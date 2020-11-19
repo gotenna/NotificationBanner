@@ -49,6 +49,7 @@ public class Banner {
     private int duration = 0;
     private int bannerType;
     private int horizontalMargin = 0;
+    private int elevation = 0;
 
     private TextView textMessage;
     private RelativeLayout rlCancel;
@@ -242,7 +243,6 @@ public class Banner {
         this.gravity = gravity;
     }
 
-
     public int getGravity() {
         return gravity;
     }
@@ -258,6 +258,19 @@ public class Banner {
 
     public int getHorizontalMargin() {
         return horizontalMargin;
+    }
+
+    /**
+     * Set the elevation of the banner in dp.
+     *
+     * @param elevation
+     */
+    public void setElevation(int elevation) {
+        this.elevation = elevation;
+    }
+
+    public int getElevation() {
+        return elevation;
     }
 
     /**
@@ -408,6 +421,7 @@ public class Banner {
             }
 
             popupWindow = new PopupWindow(popupView, width - DisplayKt.pixels(horizontalMargin, activity), height, focusable);
+            popupWindow.setElevation((float) DisplayKt.pixels(elevation, activity));
 
             if(animationStyle != null) {
                 popupWindow.setAnimationStyle(animationStyle);
