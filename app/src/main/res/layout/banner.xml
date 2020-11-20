@@ -4,10 +4,11 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:background="#12232E"
+    android:layout_margin="8dp"
     >
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="14dp">
 
