@@ -49,6 +49,7 @@ public class Banner {
     private int duration = 0;
     private int bannerType;
     private int horizontalMargin = 0;
+    private int verticalOffset = 0;
     private int elevation = 0;
 
     private TextView textMessage;
@@ -261,6 +262,19 @@ public class Banner {
     }
 
     /**
+     * Set the y axis' offset of the banner in dp.
+     *
+     * @param verticalOffset
+     */
+    public void setVerticalOffset(int verticalOffset) {
+        this.verticalOffset = verticalOffset;
+    }
+
+    public int getVerticalOffset() {
+        return verticalOffset;
+    }
+
+    /**
      * Set the elevation of the banner in dp.
      *
      * @param elevation
@@ -430,9 +444,9 @@ public class Banner {
             rootView.post(new Runnable() {
                 public void run() {
                     if(asDropDown){
-                        popupWindow.showAsDropDown(rootView,0,0);
+                        popupWindow.showAsDropDown(rootView,0, DisplayKt.pixels(verticalOffset, activity));
                     }else{
-                        popupWindow.showAtLocation(rootView, gravity, 0, 0);
+                        popupWindow.showAtLocation(rootView, gravity, 0, DisplayKt.pixels(verticalOffset, activity));
                     }
                 }
             });
