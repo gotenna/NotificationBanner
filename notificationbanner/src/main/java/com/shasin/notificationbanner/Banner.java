@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
 import android.util.Log;
+import android.os.Handler;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -13,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 
 import com.shasin.notificationbanner.util.DisplayKt;
 
@@ -33,6 +33,8 @@ public class Banner {
     private  boolean asDropDown;
     private  boolean fillScreen;
     private PopupWindow popupWindow;
+    private Runnable runnable;
+    private Handler handler = new Handler();
 
     public static int TOP = Gravity.TOP;
     public static int BOTTOM = Gravity.BOTTOM;
@@ -474,14 +476,17 @@ public class Banner {
      *
      */
     private void autoDismiss(int duration){
-        if(duration > 0){
-            android.os.Handler handler = new android.os.Handler();
-            handler.postDelayed(new Runnable() {
+        if(duration > 0) {
+            if (runnable != null) {
+                handler.removeCallbacks(runnable);
+            }
+            runnable = new Runnable() {
                 @Override
                 public void run() {
                     dismissBanner();
                 }
-            },duration);
+            };
+            handler.postDelayed(runnable,duration);
         }
     }
 }
