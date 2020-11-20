@@ -3,7 +3,9 @@ package com.shasin.notificationbanner;
 import android.app.Activity;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
-import java.util.logging.Handler;
+import com.shasin.notificationbanner.util.DisplayKt;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
@@ -46,6 +48,9 @@ public class Banner {
     private int delay = 1500;
     private int duration = 0;
     private int bannerType;
+    private int horizontalMargin = 0;
+    private int verticalOffset = 0;
+    private int elevation = 0;
 
     private TextView textMessage;
     private RelativeLayout rlCancel;
@@ -239,9 +244,47 @@ public class Banner {
         this.gravity = gravity;
     }
 
-
     public int getGravity() {
         return gravity;
+    }
+
+    /**
+     * Set the the left and right margin of the banner in dp.
+     *
+     * @param margin
+     */
+    public void setHorizontalMargin(int margin) {
+        this.horizontalMargin = margin * 2; // Multiply to account for left and right.
+    }
+
+    public int getHorizontalMargin() {
+        return horizontalMargin;
+    }
+
+    /**
+     * Set the y axis' offset of the banner in dp.
+     *
+     * @param verticalOffset
+     */
+    public void setVerticalOffset(int verticalOffset) {
+        this.verticalOffset = verticalOffset;
+    }
+
+    public int getVerticalOffset() {
+        return verticalOffset;
+    }
+
+    /**
+     * Set the elevation of the banner in dp.
+     *
+     * @param elevation
+     */
+    public void setElevation(int elevation) {
+        this.elevation = elevation;
+    }
+
+    public int getElevation() {
+        return elevation;
     }
 
     /**
@@ -258,7 +301,6 @@ public class Banner {
     public boolean isFocusable() {
         return focusable;
     }
-
 
     private void setBannerLayout(int type){
 
@@ -381,35 +423,35 @@ public class Banner {
      */
     public void show(){
 
-        if(activity!=null){
-//            if(activity.hasWindowFocus()){  //this will prevent activity not running crash due to async call
-                showBanner = true;
+        if(activity!=null) {
 
-                int width = LinearLayout.LayoutParams.MATCH_PARENT;
-                int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            showBanner = true;
 
-                if(fillScreen){
-                    height = LinearLayout.LayoutParams.MATCH_PARENT;
-                }
+            int width = DisplayKt.screenWidth(activity);
+            int height = LinearLayout.LayoutParams.WRAP_CONTENT;
 
-                popupWindow = new PopupWindow(popupView, width, height, focusable);
+            if(fillScreen) {
+                height = LinearLayout.LayoutParams.MATCH_PARENT;
+            }
 
-                if(animationStyle != null){
-                    popupWindow.setAnimationStyle(animationStyle);
-                }
+            popupWindow = new PopupWindow(popupView, width - DisplayKt.pixels(horizontalMargin, activity), height, focusable);
+            popupWindow.setElevation((float) DisplayKt.pixels(elevation, activity));
 
-                rootView.post(new Runnable() {
-                    public void run() {
-                        if(asDropDown){
-                            popupWindow.showAsDropDown(rootView,0,0);
-                        }else{
-                            popupWindow.showAtLocation(rootView, gravity, 0, 0);
-                        }
+            if(animationStyle != null) {
+                popupWindow.setAnimationStyle(animationStyle);
+            }
+
+            rootView.post(new Runnable() {
+                public void run() {
+                    if(asDropDown){
+                        popupWindow.showAsDropDown(rootView,0, DisplayKt.pixels(verticalOffset, activity));
+                    }else{
+                        popupWindow.showAtLocation(rootView, gravity, 0, DisplayKt.pixels(verticalOffset, activity));
                     }
-                });
+                }
+            });
 
-                autoDismiss(duration);
-//            }
+            autoDismiss(duration);
         }
     }
 
